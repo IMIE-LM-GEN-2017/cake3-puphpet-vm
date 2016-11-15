@@ -41,7 +41,7 @@ vagrantfile:
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
         synced_folder:
             vflsf_ca82d3be1iky:
-                source: ./
+                source: ./data/
                 target: /var/www
                 sync_type: default
                 smb:
@@ -356,6 +356,9 @@ mysql:
     databases:
         mysqlnd_m49pd3htcbtt:
             name: vagrant
+            sql: ''
+        ysqlnd_m49pd3htcbto:
+            name: vagrant_test
             sql: ''
     grants:
         mysqlng_og9dh7tpxsm5:

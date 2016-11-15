@@ -1,7 +1,7 @@
 # Virtual machine
-.vagrant/
-puphpet/config-custom.yaml
-puphpet/files/dot/ssh/
+/.vagrant/
+/puphpet/config-custom.yaml
+/puphpet/files/dot/ssh/
 
 # working dirs
-html/
+/data/
