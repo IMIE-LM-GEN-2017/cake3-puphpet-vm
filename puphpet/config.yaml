@@ -28,7 +28,7 @@ vagrantfile:
                                 vflmnfp_78do8w9jpvg5:
                                     host: '7663'
                                     guest: '22'
-                        memory: '512'
+                        memory: '768'
                         cpus: '1'
         provision:
             puppet:
@@ -112,67 +112,6 @@ cron:
     jobs: {  }
 nginx:
     install: '0'
-    settings:
-        version: present
-        default_vhost: 1
-        proxy_buffers: '4 256k'
-        proxy_buffer_size: 128k
-        proxy_connect_timeout: 600s
-        proxy_send_timeout: 600s
-        proxy_read_timeout: 600s
-        names_hash_bucket_size: 128
-    upstreams: {  }
-    vhosts:
-        nxv_9vfackrf05vp:
-            server_name: my-cake3-project.dev
-            server_aliases:
-                - www.my-cake3-project.dev
-            www_root: /var/www/html
-            listen_port: '80'
-            client_max_body_size: 1m
-            ssl: '0'
-            ssl_cert: ''
-            ssl_key: ''
-            ssl_port: '443'
-            ssl_protocols: ''
-            ssl_ciphers: ''
-            rewrite_to_https: '1'
-            spdy: '1'
-            locations:
-                nxvl_bbi2poawouz8:
-                    www_root: ''
-                    location: /
-                    index_files:
-                        - index.html
-                        - index.htm
-                        - index.php
-                    try_files:
-                        - $uri
-                        - $uri/
-                        - /index.php$is_args$args
-                    fastcgi: ''
-                    fastcgi_index: ''
-                    fastcgi_split_path: ''
-                    proxy: ''
-                    proxy_redirect: ''
-                nxvl_8ko4vjyqpnjk:
-                    www_root: ''
-                    location: '~ \.php$'
-                    try_files:
-                        - $uri
-                        - $uri/
-                        - /index.php$is_args$args
-                    fastcgi: '127.0.0.1:9000'
-                    fastcgi_index: index.php
-                    fastcgi_split_path: '^(.+\.php)(/.*)$'
-                    fast_cgi_params_extra:
-                        - 'SCRIPT_FILENAME $request_filename'
-                        - 'APP_ENV dev'
-                    set:
-                        - '$path_info $fastcgi_path_info'
-                    proxy: ''
-                    proxy_redirect: ''
-    proxies: {  }
 apache:
     install: '1'
     settings:
@@ -189,8 +128,6 @@ apache:
     vhosts:
         av_qv343r9pojsx:
             servername: my-cake3-project.dev
-            serveraliases:
-                - www.my-cake3-project.dev
             docroot: /var/www/html
             port: '443'
             setenv:
@@ -225,7 +162,7 @@ apache:
                             provider: filesmatch
                     provider: directory
 letsencrypt:
-    install: '0'
+    install: '1'
     settings:
         email: admin@my-cake3-project.dev
     domains: {  }
@@ -239,6 +176,7 @@ php:
             - intl
             - xml
             - mbstring
+            - gd
         pear: {  }
         pecl: {  }
     ini:
@@ -269,26 +207,12 @@ xdebug:
         xdebug.remote_port: '9000'
 blackfire:
     install: '0'
-    settings:
-        server_id: ''
-        server_token: ''
-        agent:
-            http_proxy: ''
-            https_proxy: ''
-            log_file: stderr
-            log_level: '1'
-        php:
-            agent_timeout: '0.25'
-            log_file: ''
-            log_level: '1'
 xhprof:
     install: '0'
 wpcli:
     install: '0'
-    version: v0.24.1
 drush:
     install: '0'
-    version: 8.0.5
 ruby:
     install: '1'
     versions:
@@ -311,39 +235,8 @@ nodejs:
     npm_packages: {  }
 hhvm:
     install: '0'
-    composer: '1'
-    composer_home: ''
-    settings: {  }
-    server_ini:
-        hhvm.server.host: 127.0.0.1
-        hhvm.server.port: '9000'
-        hhvm.log.use_log_file: '1'
-        hhvm.log.file: /var/log/hhvm/error.log
-    php_ini:
-        display_errors: 'On'
-        error_reporting: '-1'
-        date.timezone: UTC
 mariadb:
     install: '0'
-    settings:
-        version: '10.1'
-        root_password: '123'
-        override_options: {  }
-    adminer: 0
-    users:
-        mariadbnu_kxxu1xha1yt3:
-            name: dbuser
-            password: '123'
-    databases:
-        mariadbnd_z5sv2af36oiz:
-            name: dbname
-            sql: ''
-    grants:
-        mariadbng_9c4u8em9qii0:
-            user: dbuser
-            table: '*.*'
-            privileges:
-                - ALL
 mysql:
     install: '1'
     settings:
@@ -370,34 +263,16 @@ mysql:
                 - ALL
 postgresql:
     install: '0'
-    settings:
-        global:
-            encoding: UTF8
-            version: '9.6'
-        server:
-            postgres_password: '123'
-    databases: {  }
-    users: {  }
-    grants: {  }
-    adminer: 0
 mongodb:
     install: '0'
-    settings:
-        bind_ip: 127.0.0.1
-        port: '27017'
-    globals:
-        version: 2.6.0
-    databases: {  }
 redis:
     install: '0'
-    settings:
-        port: '6379'
 sqlite:
     install: '1'
     adminer: 0
     databases: {  }
 mailhog:
-    install: '0'
+    install: '1'
     settings:
         smtp_ip: 0.0.0.0
         smtp_port: 1025
@@ -406,32 +281,9 @@ mailhog:
         path: /usr/local/bin/mailhog
 beanstalkd:
     install: '0'
-    settings:
-        listenaddress: 0.0.0.0
-        listenport: '11300'
-        maxjobsize: '65535'
-        maxconnections: '1024'
-        binlogdir: /var/lib/beanstalkd/binlog
-        binlogfsync: null
-        binlogsize: '10485760'
-    beanstalk_console: 0
 rabbitmq:
     install: '0'
-    settings:
-        port: '5672'
-    users: {  }
-    vhosts: {  }
-    plugins: {  }
 elastic_search:
     install: '0'
-    settings:
-        version: 2.3.1
-        java_install: true
-    instances:
-        esi_vacn1bltdnfd:
-            name: es-01
 solr:
     install: '0'
-    settings:
-        version: 5.5.2
-        port: '8984'
