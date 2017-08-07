@@ -3,6 +3,8 @@ vagrantfile:
     vm:
         provider:
             local:
+                # Image de base à utiliser. Si tout le monde est en 64bits, utiliser
+                # puphpet/ubuntu1604-x64
                 box: puphpet/ubuntu1604-i386
                 box_url: puphpet/ubuntu1604-i386
                 box_version: '0'
@@ -20,18 +22,35 @@ vagrantfile:
                         update_guest_tools: 0
                 machines:
                     vflm_1zl7uflqpwl2:
-                        id: my-cake3-project
-                        hostname: my-cake3-project.puphpet
+                        # Changer cet id pour vos différents projets pour éviter les conflits et
+                        # retrouver vos VMs.
+                        # Faites un remplacement de tous les "vm-cours" par autre chose (pas d'espaces ni d'accents)
+                        id: vm-cours
+                        hostname: vm-cours.puphpet
                         network:
+                            # Adresse sur laquelle la vm sera disponible si tout se passe bien. 
+                            # Changer le 200 par autre chose (entre 0 et 255) pour vos différents projets si vous souhaitez
+                            # lancer plusieurs vm en même temps.
                             private_network: 192.168.56.200
+                            # Les ports forwardés auront une correspondance en local (127.0.0.1) avec un port de la vm.
+                            # ex: le service écoutant sur le port 80 de la VM (apache) sera disponible sur le port 8000 (127.0.0.1:8000)
+                            # Pour éviter les conflits de ports, changer le 8000 par autre chose.
                             forwarded_port:
+                                # SSH
                                 vflmnfp_78do8w9jpvg5:
                                     host: '7663'
                                     guest: '22'
+                                # Apache
                                 vflmnfp_98qs8w9jpvg5:
                                     host: '8000'
                                     guest: '80'
+                                # Mailhog
+                                vflmnfp_uios8w9jpvg5:
+                                    host: '8025'
+                                    guest: '8025'
+                        # RAM allouée à la vm, en Mo; si vous descendez en dessous de 512 vous risquez d'avoir des soucis de lenteur
                         memory: '768'
+                        # Nombre de coeurs alloués
                         cpus: '1'
         provision:
             puppet:
@@ -42,7 +61,10 @@ vagrantfile:
                 options:
                     - '--verbose'
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
+        # Dossiers partagés
+        # Dans tous les cas, le dossier de la vm (là ou le fichier Vagrantfile est) est disponible dans la vm, dans /vagrant
         synced_folder:
+            # Dossier ./data, disponible dans la vm à /var/www (Voir la config d'apache, un peu plus bas
             vflsf_ca82d3be1iky:
                 source: ./data/
                 target: /var/www
@@ -129,8 +151,9 @@ apache:
         - proxy_fcgi
         - rewrite
     vhosts:
+        # Configuration par défaut; le dossier /var/www/html correspond à la racine du serveur (ex: http://192.168.56.200/)
         av_qv343r9pojsx:
-            servername: my-cake3-project.dev
+            servername: vm-cours.dev
             docroot: /var/www/html
             port: '443'
             setenv:
@@ -167,7 +190,7 @@ apache:
 letsencrypt:
     install: '1'
     settings:
-        email: admin@my-cake3-project.dev
+        email: admin@vm-cours.dev
     domains: {  }
 php:
     install: '1'
